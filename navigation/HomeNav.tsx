@@ -2,10 +2,20 @@ import { View } from "react-native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { useTheme } from "@react-navigation/native";
 import { Octicons, MaterialCommunityIcons } from "@expo/vector-icons";
+
 import HomeScreen from "../screens/HomeScreen";
 import Colors from "../constants/Colors";
+import ChatScreen from "../screens/ChatScreen";
 
-const Stack = createNativeStackNavigator();
+export type NativeStackParamList = {
+  Home: undefined;
+  Chat: {
+    name: string;
+    conversationId: string;
+  };
+};
+
+const Stack = createNativeStackNavigator<NativeStackParamList>();
 
 export default function HomeNav() {
   const { dark } = useTheme();
@@ -47,7 +57,8 @@ export default function HomeNav() {
             </View>
           ),
         }}
-      ></Stack.Screen>
+      />
+      <Stack.Screen name="Chat" component={ChatScreen} options={({ route }) => ({ title: route.params.name })} />
     </Stack.Navigator>
   );
 }

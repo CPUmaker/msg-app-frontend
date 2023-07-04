@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import {
   StyleSheet,
   View,
@@ -18,11 +18,19 @@ import Animated, {
   withSequence,
   withSpring,
 } from "react-native-reanimated";
+import { Button } from "@rneui/themed";
+
+import { AuthContext } from "../context/AuthContext";
 
 const { height, width } = Dimensions.get("window");
 
 export default function WelcomeScreen() {
+  const { login, register } = useContext(AuthContext);
   const [isRegistering, setIsRegistering] = useState(false);
+  const [isButtonLoading, setIsButtonLoading] = useState(false);
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+
   const imagePosition = useSharedValue(1);
   const formButtonScale = useSharedValue(1);
 
@@ -88,6 +96,20 @@ export default function WelcomeScreen() {
     }
   };
 
+  const confirmHandler = async () => {
+    formButtonScale.value = withSequence(withSpring(1.5), withSpring(1));
+    setIsButtonLoading(true);
+    if (isRegistering) {
+      register(username, password, () => {
+        setIsButtonLoading(false);
+      });
+    } else {
+      login(username, password, () => {
+        setIsButtonLoading(false);
+      });
+    }
+  };
+
   return (
     <View style={styles.container}>
       <Animated.View style={[StyleSheet.absoluteFill, imageAnimatedStyle]}>
@@ -133,25 +155,24 @@ export default function WelcomeScreen() {
             placeholder={isRegistering ? "Email" : "Email/Username"}
             placeholderTextColor={"black"}
             style={styles.textInput}
+            autoCapitalize="none"
+            value={username}
+            onChangeText={(text) => setUsername(text)}
           />
           <TextInput
             placeholder="Password"
             placeholderTextColor={"black"}
             style={styles.textInput}
+            secureTextEntry={true}
+            value={password}
+            onChangeText={(text) => setPassword(text)}
           />
           <Animated.View style={[styles.formButton, formButtonAnimatedStyle]}>
-            <Pressable
-              onPress={() =>
-                (formButtonScale.value = withSequence(
-                  withSpring(1.5),
-                  withSpring(1)
-                ))
-              }
-            >
+            <Button onPress={confirmHandler} loading={isButtonLoading}>
               <Text style={styles.buttonText}>
                 {isRegistering ? "REGISTER" : "LOG IN"}
               </Text>
-            </Pressable>
+            </Button>
           </Animated.View>
         </Animated.View>
       </View>

@@ -1,10 +1,14 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import * as SplashScreen from "expo-splash-screen";
 import { useFonts } from "expo-font";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { StatusBar } from "expo-status-bar";
-import RootNav from "./navigation/RootNav";
-import WelcomeScreen from "./screens/WelcomeScreen";
+import FlashMessage from "react-native-flash-message";
+import { ApolloProvider } from "@apollo/client";
+
+import AuthProvider from "./context/AuthContext";
+import Navigation from "./navigation";
+import { client } from "./graphql";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -23,11 +27,18 @@ export default function App() {
     hideSplash();
   }, [loaded]);
 
+  if (!loaded) {
+    return null;
+  }
+
   return (
-    <>
-      {!loaded && null}
-      {/* {loaded && <RootNav />} */}
-      {loaded && <WelcomeScreen />}
-    </>
+    <AuthProvider>
+      <ApolloProvider client={client}>
+        <>
+          <Navigation />
+          <FlashMessage position="top" />
+        </>
+      </ApolloProvider>
+    </AuthProvider>
   );
 }
