@@ -1,5 +1,5 @@
-import React from "react";
-import { FlatList } from "react-native";
+import React, { useRef } from "react";
+import { FlatList, View } from "react-native";
 import { gql, useMutation, useQuery, useSubscription } from "@apollo/client";
 
 import MessageOperations from "../../graphql/operations/messages";
@@ -8,6 +8,7 @@ import MessageItem from "./MessageItem";
 import { ChatScreenProps } from "../../screens/ChatScreen";
 
 const MessagesWrapper = ({ route, navigation }: ChatScreenProps) => {
+  const flatList = useRef<FlatList>(null);
   const {
     data: messagesData,
     loading: messagesLoading,
@@ -25,15 +26,25 @@ const MessagesWrapper = ({ route, navigation }: ChatScreenProps) => {
     }
   );
 
+  const messages = messagesData?.messages || [];
+
   if (messagesLoading) {
     return null;
   }
-  console.log(messagesData?.messages || []);
+  if (messages.length === 0) {
+    return (<View style={{flex: 1}}/>)
+  }
+
   return (
     <FlatList
-      data={messagesData?.messages || []}
+      data={messages}
       renderItem={({ item }) => <MessageItem message={item} />}
       keyExtractor={(item) => item.id}
+      ref={flatList}
+      onContentSizeChange={() =>
+        flatList.current?.scrollToEnd({ animated: true })
+      }
+      onLayout={() => flatList.current?.scrollToEnd({ animated: true })}
     />
   );
 };

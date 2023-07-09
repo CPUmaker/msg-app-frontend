@@ -43,7 +43,7 @@ export default {
       }
     `,
     deleteConversation: gql`
-      mutation deleteConversation($conversationId: String!) {
+      mutation DeleteConversation($conversationId: String!) {
         deleteConversation(conversationId: $conversationId)
       }
     `,

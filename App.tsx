@@ -5,6 +5,7 @@ import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { StatusBar } from "expo-status-bar";
 import FlashMessage from "react-native-flash-message";
 import { ApolloProvider } from "@apollo/client";
+import 'react-native-get-random-values';
 
 import AuthProvider from "./context/AuthContext";
 import Navigation from "./navigation";

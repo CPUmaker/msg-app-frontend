@@ -5,6 +5,7 @@ import ConversationOperations from "../../graphql/operations/conversations";
 import { ConversationsData } from "../../utils/types";
 import ConversationItem from "./ConversationItem";
 import { HomeScreenProps } from "../../screens/HomeScreen";
+import SwipeableRow from "./SwipeableRow";
 
 const ConversationsWrapper = ({ navigation }: HomeScreenProps) => {
   const {
@@ -16,18 +17,36 @@ const ConversationsWrapper = ({ navigation }: HomeScreenProps) => {
     onError: (error) => {
       console.log(`query error: ${error?.message}`);
     },
+    pollInterval: 500,
   });
+
+  const [deleteConversation] = useMutation<
+    { deleteConversation: boolean },
+    { conversationId: string }
+  >(ConversationOperations.Mutation.deleteConversation);
 
   if (conversationsLoading) {
     return null;
   }
-  console.log(conversationsData?.conversations || []);
+
+  const onDeleteConversation = (conversationId: string) => {
+    deleteConversation({
+      variables: {
+        conversationId,
+      },
+    });
+  };
 
   return (
     <FlatList
       data={conversationsData?.conversations || []}
       renderItem={({ item }) => (
-        <ConversationItem conversation={item} navigation={navigation} />
+        <SwipeableRow
+          value={item.id}
+          onDelete={onDeleteConversation}
+        >
+          <ConversationItem conversation={item} navigation={navigation} />
+        </SwipeableRow>
       )}
       keyExtractor={(item) => item.id}
     />

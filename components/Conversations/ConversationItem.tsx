@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
-import { Avatar } from "@rneui/themed";
+import { Avatar, Divider } from "@rneui/themed";
 import { formatRelative } from "date-fns";
 import enUS from "date-fns/locale/en-US";
 
@@ -59,9 +59,9 @@ const ConversationItem = (props: ChatListItemProps) => {
   );
   const conversationName =
     participantsExcludeYou.length >= 2
-      ? `${participants[0].user.username} and others`
+      ? `${participantsExcludeYou[0].user.username} and others`
       : participantsExcludeYou.length === 1
-      ? participants[0].user.username
+      ? participantsExcludeYou[0].user.username
       : "You";
 
   const enterChatScreen = () => {
@@ -72,7 +72,7 @@ const ConversationItem = (props: ChatListItemProps) => {
   };
 
   return (
-    // <View style={styles.container}>
+    <>
     <TouchableOpacity style={styles.container} onPress={enterChatScreen}>
       <Avatar
         containerStyle={styles.avatar}
@@ -82,7 +82,7 @@ const ConversationItem = (props: ChatListItemProps) => {
       />
       <View style={styles.rightContainer}>
         <View style={styles.titleContainer}>
-          <Text style={styles.username}>{conversationName}</Text>
+          <Text style={styles.username} numberOfLines={1}>{conversationName}</Text>
           <Text style={styles.time}>
             {formatRelative(conversation.updatedAt, new Date(), {
               locale: {
@@ -96,11 +96,12 @@ const ConversationItem = (props: ChatListItemProps) => {
           </Text>
         </View>
         <Text numberOfLines={2} style={styles.latestMessage}>
-          {latestMessage.body}
+          {latestMessage?.body}
         </Text>
       </View>
     </TouchableOpacity>
-    // </View>
+    <Divider inset={true} />
+    </>
   );
 };
 
@@ -108,7 +109,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: "row",
-    width: "100%",
     marginVertical: 5,
     alignItems: "flex-start",
     justifyContent: "flex-start",
@@ -129,6 +129,7 @@ const styles = StyleSheet.create({
   username: {
     fontWeight: "bold",
     fontSize: 18,
+    maxWidth: "75%",
   },
   latestMessage: {
     fontSize: 14,

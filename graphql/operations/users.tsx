@@ -10,6 +10,14 @@ export default {
         }
       }
     `,
+    usersInConversation: gql`
+      query UsersInConversation($conversationId: String!) {
+        usersInConversation(conversationId: $conversationId) {
+          id
+          username
+        }
+      }
+    `,
   },
   Mutation: {
     createUsername: gql`

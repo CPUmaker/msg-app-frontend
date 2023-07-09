@@ -25,6 +25,22 @@ export interface User {
   username: string;
 }
 
+export interface UsersData {
+  searchUsers: Array<User>
+};
+
+export interface UsersVariables {
+  username: string;
+}
+
+export interface UsersInConversationData {
+  usersInConversation: Array<User>
+};
+
+export interface UsersInConversationVariables {
+  conversationId: string;
+}
+
 export interface MessagePopulated {
   id: string;
   sender: {
@@ -44,6 +60,13 @@ export interface MessagesVariables {
   conversationId: string;
 }
 
+export interface SendMessageVariables {
+  id: string;
+  conversationId: string;
+  senderId: string;
+  body: string;
+}
+
 export interface ConversationPopulated {
   id: string;
   participants: {
@@ -61,4 +84,19 @@ export interface ConversationPopulated {
 
 export interface ConversationsData {
   conversations: Array<ConversationPopulated>;
+}
+
+export interface CreateConversationData {
+  createConversation: {
+    conversationId: string;
+  };
+}
+
+export interface UpdateParticipantsData {
+  updateParticipants: boolean;
+}
+
+export interface UpdateParticipantsVariables {
+  conversationId: string;
+  participantIds: string[];
 }
