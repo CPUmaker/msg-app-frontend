@@ -2,10 +2,10 @@ import { useEffect, useState } from "react";
 import * as SplashScreen from "expo-splash-screen";
 import { useFonts } from "expo-font";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
-import { StatusBar } from "expo-status-bar";
 import FlashMessage from "react-native-flash-message";
 import { ApolloProvider } from "@apollo/client";
-import 'react-native-get-random-values';
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+import "react-native-get-random-values";
 
 import AuthProvider from "./context/AuthContext";
 import Navigation from "./navigation";
@@ -33,13 +33,15 @@ export default function App() {
   }
 
   return (
-    <AuthProvider>
-      <ApolloProvider client={client}>
-        <>
-          <Navigation />
-          <FlashMessage position="top" />
-        </>
-      </ApolloProvider>
-    </AuthProvider>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <AuthProvider>
+        <ApolloProvider client={client}>
+          <>
+            <Navigation />
+            <FlashMessage position="top" />
+          </>
+        </ApolloProvider>
+      </AuthProvider>
+    </GestureHandlerRootView>
   );
 }

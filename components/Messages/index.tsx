@@ -1,14 +1,18 @@
-import React, { useRef } from "react";
+import React, { useContext, useEffect, useRef } from "react";
 import { FlatList, View } from "react-native";
-import { gql, useMutation, useQuery, useSubscription } from "@apollo/client";
+import { useQuery } from "@apollo/client";
+import { FlashList } from "@shopify/flash-list";
 
 import MessageOperations from "../../graphql/operations/messages";
-import { MessagesData, MessagesVariables } from "../../utils/types";
+import { MessagesData, MessagesSubscriptionData, MessagesVariables } from "../../utils/types";
 import MessageItem from "./MessageItem";
 import { ChatScreenProps } from "../../screens/ChatScreen";
+import { AuthContext } from "../../context/AuthContext";
 
 const MessagesWrapper = ({ route, navigation }: ChatScreenProps) => {
+  const { userId } = useContext(AuthContext);
   const flatList = useRef<FlatList>(null);
+
   const {
     data: messagesData,
     loading: messagesLoading,
@@ -25,6 +29,33 @@ const MessagesWrapper = ({ route, navigation }: ChatScreenProps) => {
       },
     }
   );
+
+  const subscribeToMoreMessages = (conversationId: string) => {
+    return subscribeToMore({
+      document: MessageOperations.Subscription.messageSent,
+      variables: {
+        conversationId,
+      },
+      updateQuery: (prev, { subscriptionData }: MessagesSubscriptionData) => {
+        if (!subscriptionData.data) return prev;
+
+        const newMessage = subscriptionData.data.messageSent;
+
+        return Object.assign({}, prev, {
+          messages:
+            newMessage.sender.id === userId
+              ? prev.messages
+              : [...prev.messages, newMessage],
+        });
+      },
+    });
+  };
+
+  useEffect(() => {
+    const unsubscribe = subscribeToMoreMessages(route.params.conversationId);
+
+    return () => unsubscribe();
+  }, [route.params.conversationId]);
 
   const messages = messagesData?.messages || [];
 

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { StyleSheet, View, Text, Keyboard, KeyboardEvent } from "react-native";
+import { StyleSheet, View, Text, Keyboard, KeyboardEvent, SafeAreaView } from "react-native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { SearchBar } from "@rneui/themed";
 
@@ -48,7 +48,7 @@ export default function ChatScreen({ route, navigation }: ChatScreenProps) {
 
   if (!route.params.conversationId) {
     return (
-      <View style={styles.container}>
+      <SafeAreaView style={styles.container}>
         <SearchBar
           placeholder="Enter a name or email"
           onChangeText={setSearch}
@@ -68,16 +68,16 @@ export default function ChatScreen({ route, navigation }: ChatScreenProps) {
             navigation={navigation}
           />
         )}
-      </View>
+      </SafeAreaView>
     );
   }
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <MessagesWrapper route={route} navigation={navigation} />
       <Input conversationId={route.params.conversationId} />
       {keyboardHeight === 0 || <View style={{ height: keyboardHeight }}></View>}
-    </View>
+    </SafeAreaView>
   );
 }
 

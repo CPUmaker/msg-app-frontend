@@ -1,4 +1,4 @@
-import React, { createContext, useState, ReactNode } from "react";
+import React, { createContext, useState, ReactNode, useEffect } from "react";
 import axios from "axios";
 import * as SecureStore from "expo-secure-store";
 import { showMessage } from "react-native-flash-message";
@@ -12,6 +12,7 @@ export interface AuthContextType {
   register: (email: string, password: string, done: () => void) => void;
   login: (username: string, password: string, done: () => void) => void;
   checkValid: () => void;
+  logout: () => void;
 }
 
 export const AuthContext = createContext<AuthContextType>({
@@ -21,19 +22,23 @@ export const AuthContext = createContext<AuthContextType>({
   register: (email: string, password: string, done: () => void) => null,
   login: (username: string, password: string, done: () => void) => null,
   checkValid: () => null,
+  logout: () => null,
 });
 
 const AuthProvider = (props: { children: ReactNode }) => {
   const [isAuthed, setIsAuthed] = useState(false);
   const [userId, setUserId] = useState("");
-  SecureStore.getItemAsync("token").then(async (value) => {
-    if (value) {
-      axios.defaults.headers.common["Authorization"] = `Bearer ${value}`;
-      setUserId(await SecureStore.getItemAsync("userId") ?? "")
-      setIsAuthed(true);
-    }
-    checkValid();
-  });
+  
+  useEffect(() => {
+    SecureStore.getItemAsync("token").then(async (token) => {
+      if (token) {
+        axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+        setUserId(await SecureStore.getItemAsync("userId") ?? "")
+        setIsAuthed(true);
+      }
+      checkValid();
+    });
+  }, []);
 
   const register = (email: string, password: string, done: () => void) => {
     axios
@@ -88,13 +93,17 @@ const AuthProvider = (props: { children: ReactNode }) => {
   const checkValid = () => {
     axios
       .post(endpoints.checkValid, {})
-      .catch(async (error) => {
-        axios.defaults.headers.common["Authorization"] = null;
-        await SecureStore.deleteItemAsync("token");
-        await SecureStore.deleteItemAsync("userId");
-        setIsAuthed(false);
-        setUserId("");
+      .catch((error) => {
+        logout();
       });
+  };
+
+  const logout = async () => {
+    axios.defaults.headers.common["Authorization"] = null;
+    await SecureStore.deleteItemAsync("token");
+    await SecureStore.deleteItemAsync("userId");
+    setIsAuthed(false);
+    setUserId("");
   };
 
   return (
@@ -106,6 +115,7 @@ const AuthProvider = (props: { children: ReactNode }) => {
         register,
         login,
         checkValid,
+        logout,
       }}
     >
       {props.children}

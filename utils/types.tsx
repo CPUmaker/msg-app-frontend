@@ -25,6 +25,13 @@ export interface User {
   username: string;
 }
 
+export interface UserProfileData {
+  user: {
+    username: string;
+    email: string;
+  };
+}
+
 export interface UsersData {
   searchUsers: Array<User>
 };
@@ -67,6 +74,14 @@ export interface SendMessageVariables {
   body: string;
 }
 
+export interface MessagesSubscriptionData {
+  subscriptionData: {
+    data: {
+      messageSent: MessagePopulated;
+    };
+  };
+}
+
 export interface ConversationPopulated {
   id: string;
   participants: {
@@ -92,6 +107,14 @@ export interface CreateConversationData {
   };
 }
 
+export interface ConversationCreatedSubscriptionData {
+  subscriptionData: {
+    data: {
+      conversationCreated: ConversationPopulated;
+    };
+  };
+}
+
 export interface UpdateParticipantsData {
   updateParticipants: boolean;
 }
@@ -99,4 +122,18 @@ export interface UpdateParticipantsData {
 export interface UpdateParticipantsVariables {
   conversationId: string;
   participantIds: string[];
+}
+
+export interface ConversationUpdatedData {
+  conversationUpdated: {
+    conversation: ConversationPopulated;
+    addedUserIds: Array<string> | null;
+    removedUserIds: Array<string> | null;
+  };
+}
+
+export interface ConversationDeletedData {
+  conversationDeleted: {
+    id: string;
+  };
 }

@@ -9,6 +9,7 @@ import ChatScreen from "../screens/ChatScreen";
 import ChatDetailsScreen from "../screens/ChatDetailsScreen";
 import AddPeopleScreen from "../screens/AddpeopleScreen";
 import { User } from "../utils/types";
+import QRCodeScreen from "../screens/QRCodeScreen";
 
 export type NativeStackParamList = {
   Home: undefined;
@@ -24,6 +25,7 @@ export type NativeStackParamList = {
     conversationId: string;
     users?: Array<User>;
   };
+  QRCode: undefined;
 };
 
 const Stack = createNativeStackNavigator<NativeStackParamList>();
@@ -59,7 +61,7 @@ export default function HomeNav() {
                 justifyContent: "space-between",
               }}
             >
-              <TouchableOpacity>
+              <TouchableOpacity onPress={() => navigation.navigate("QRCode")}>
                 <Ionicons name="camera-outline" size={24} color="white" />
               </TouchableOpacity>
               <TouchableOpacity
@@ -110,6 +112,11 @@ export default function HomeNav() {
           title: "Add People",
           presentation: "modal",
         }}
+      />
+      <Stack.Screen
+        name="QRCode"
+        component={QRCodeScreen}
+        options={{ title: "Add Friend" }}
       />
     </Stack.Navigator>
   );

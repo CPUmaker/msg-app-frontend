@@ -15,6 +15,9 @@ import { endpoints } from "../constants/APIs";
 const wsLink = new GraphQLWsLink(
   createClient({
     url: endpoints.graphqlSubscript,
+    connectionParams: async () => ({
+      userId: await SecureStore.getItemAsync("token"),
+    }),
   })
 );
 

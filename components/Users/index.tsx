@@ -1,7 +1,8 @@
 import React, { useContext, useEffect } from "react";
-import { FlatList } from "react-native";
-import { useQuery, useMutation } from "@apollo/client";
+import { View } from "react-native";
+import { useQuery, useLazyQuery, useMutation } from "@apollo/client";
 import { showMessage } from "react-native-flash-message";
+import { FlashList } from "@shopify/flash-list";
 
 import { ChatScreenProps } from "../../screens/ChatScreen";
 import { AddPeopleScreenProps } from "../../screens/AddpeopleScreen";
@@ -44,19 +45,30 @@ export default function UsersWrapper(props: UsersWrapper) {
       }
     );
 
-  const {
+  const [getSearchUsers, {
     data: usersData,
     loading: usersLoading,
     error: usersError,
-    subscribeToMore,
-  } = useQuery<UsersData, UsersVariables>(UserOperations.Query.searchUsers, {
-    variables: {
-      username: props.searchName,
-    },
-    onError: (error) => {
-      console.log(`query error: ${error?.message}`);
-    },
-  });
+  }] = useLazyQuery<UsersData, UsersVariables>(UserOperations.Query.searchUsers);
+
+  useEffect(() => {
+    const abortController = new AbortController();
+    getSearchUsers({
+      variables: {
+        username: props.searchName,
+      },
+      context: {
+        fetchOptions: {
+          signal: abortController.signal,
+        },
+      },
+      onError: (error) => {
+        console.log(`query error: ${error?.message}`);
+      },
+    });
+
+    return () => abortController.abort();
+  }, [props.searchName]);
 
   const onCreateConversation = async (name: string, id: string) => {
     const participantIds = [userId, id];
@@ -122,7 +134,7 @@ export default function UsersWrapper(props: UsersWrapper) {
   }
 
   return (
-    <FlatList
+    <FlashList
       data={usersData?.searchUsers || []}
       renderItem={({ item }) => (
         <UserItem
@@ -138,6 +150,7 @@ export default function UsersWrapper(props: UsersWrapper) {
         />
       )}
       keyExtractor={(item) => item.id}
+      estimatedItemSize={100}
     />
   );
 }

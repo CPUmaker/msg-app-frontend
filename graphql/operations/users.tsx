@@ -2,6 +2,14 @@ import { gql } from "@apollo/client";
 
 export default {
   Query: {
+    user: gql`
+      query User {
+        user {
+          username
+          email
+        }
+      }
+    `,
     searchUsers: gql`
       query SearchUsers($username: String!) {
         searchUsers(username: $username) {

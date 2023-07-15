@@ -22,7 +22,7 @@ export default function RootNav() {
 
   const getTabBarVisibility = (route: Route<string>) => {
     const routeName = getFocusedRouteNameFromRoute(route) as string;
-    const hideOnScreens = ["Chat"];
+    const hideOnScreens = ["Chat", "ChatDetails", "AddPeople"];
     return hideOnScreens.indexOf(routeName) <= -1;
   };
 
