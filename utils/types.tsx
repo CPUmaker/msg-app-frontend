@@ -23,12 +23,14 @@ export interface Message {
 export interface User {
   id: string;
   username: string;
+  avatar: string;
 }
 
 export interface UserProfileData {
   user: {
     username: string;
     email: string;
+    avatar: string;
   };
 }
 
@@ -53,6 +55,7 @@ export interface MessagePopulated {
   sender: {
     id: string;
     username: string;
+    avatar: string;
   };
   conversation: string;
   body: string;
@@ -89,6 +92,7 @@ export interface ConversationPopulated {
     user: {
       id: string;
       username: string;
+      avatar: string;
     };
     conversation: string;
     hasSeenLatestMessage: boolean;

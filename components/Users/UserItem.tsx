@@ -21,23 +21,25 @@ export interface UserListItemProps {
 const UserItem = (props: UserListItemProps) => {
   return (
     <TouchableOpacity onPress={() => props.onPress(props.name, props.id)}>
-    <ListItem
-      bottomDivider
-      containerStyle={{ backgroundColor: "#f2f2f2" }}
-    >
-      <Avatar
-        rounded
-        icon={{
-          name: "person-outline",
-          type: "material",
-          size: 26,
-        }}
-        containerStyle={{ backgroundColor: "#c2c2c2" }}
-      />
-      <ListItem.Content>
-        <ListItem.Title>{props.name}</ListItem.Title>
-      </ListItem.Content>
-    </ListItem>
+      <ListItem bottomDivider containerStyle={{ backgroundColor: "#f2f2f2" }}>
+        <Avatar
+          rounded
+          source={props.avatarImage ? { uri: props.avatarImage } : undefined}
+          icon={
+            props.avatarImage
+              ? undefined
+              : {
+                  name: "person-outline",
+                  type: "material",
+                  size: 26,
+                }
+          }
+          containerStyle={{ backgroundColor: "#c2c2c2" }}
+        />
+        <ListItem.Content>
+          <ListItem.Title>{props.name}</ListItem.Title>
+        </ListItem.Content>
+      </ListItem>
     </TouchableOpacity>
   );
 };

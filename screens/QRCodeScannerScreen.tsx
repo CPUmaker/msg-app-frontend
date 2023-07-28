@@ -6,7 +6,7 @@ import {
   BarCodeEvent,
 } from "expo-barcode-scanner";
 
-export default function QRCodeScreen() {
+export default function QRCodeScannerScreen() {
   const [hasPermission, setHasPermission] = useState(false);
   const [scanned, setScanned] = useState(false);
 

@@ -9,7 +9,7 @@ import ChatScreen from "../screens/ChatScreen";
 import ChatDetailsScreen from "../screens/ChatDetailsScreen";
 import AddPeopleScreen from "../screens/AddpeopleScreen";
 import { User } from "../utils/types";
-import QRCodeScreen from "../screens/QRCodeScreen";
+import QRCodeScannerScreen from "../screens/QRCodeScannerScreen";
 
 export type NativeStackParamList = {
   Home: undefined;
@@ -84,19 +84,30 @@ export default function HomeNav() {
         options={({ route, navigation }) => ({
           title: route.params.name,
           headerRight: () => (
-            <TouchableOpacity
-              onPress={() =>
-                navigation.navigate("ChatDetails", {
-                  conversationId: route.params.conversationId,
-                })
-              }
+            <View
+              style={{
+                flexDirection: "row",
+                width: 60,
+                justifyContent: "space-between",
+              }}
             >
-              <Ionicons
-                name="ellipsis-vertical-sharp"
-                size={24}
-                color="white"
-              />
-            </TouchableOpacity>
+              <TouchableOpacity>
+                <Ionicons name="videocam-outline" size={24} color="white" />
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() =>
+                  navigation.navigate("ChatDetails", {
+                    conversationId: route.params.conversationId,
+                  })
+                }
+              >
+                <Ionicons
+                  name="ellipsis-vertical-sharp"
+                  size={24}
+                  color="white"
+                />
+              </TouchableOpacity>
+            </View>
           ),
         })}
       />
@@ -115,7 +126,7 @@ export default function HomeNav() {
       />
       <Stack.Screen
         name="QRCode"
-        component={QRCodeScreen}
+        component={QRCodeScannerScreen}
         options={{ title: "Add Friend" }}
       />
     </Stack.Navigator>

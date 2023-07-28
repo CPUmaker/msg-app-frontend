@@ -8,6 +8,7 @@ export const ConversationFields = `
     user {
       id
       username
+      avatar
     }
     hasSeenLatestMessage
   }

@@ -7,6 +7,7 @@ export default {
         user {
           username
           email
+          avatar
         }
       }
     `,
@@ -15,6 +16,7 @@ export default {
         searchUsers(username: $username) {
           id
           username
+          avatar
         }
       }
     `,
@@ -23,6 +25,7 @@ export default {
         usersInConversation(conversationId: $conversationId) {
           id
           username
+          avatar
         }
       }
     `,

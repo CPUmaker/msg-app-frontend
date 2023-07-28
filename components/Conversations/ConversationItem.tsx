@@ -13,41 +13,12 @@ export interface ChatListItemProps {
   navigation: HomeScreenProps["navigation"];
 }
 
-type AvatarData = {
-  image_url: string;
-};
-
 const formatRelativeLocale = {
   lastWeek: "eeee",
   yesterday: "'Yesterday",
   today: "p",
   other: "MM/dd/yy",
 };
-
-const dataList: AvatarData[] = [
-  {
-    image_url: "https://uifaces.co/our-content/donated/6MWH9Xi_.jpg",
-  },
-  {
-    image_url: "https://randomuser.me/api/portraits/men/36.jpg",
-  },
-  {
-    image_url:
-      "https://cdn.pixabay.com/photo/2019/11/03/20/11/portrait-4599553__340.jpg",
-  },
-  {
-    image_url:
-      "https://cdn.pixabay.com/photo/2014/09/17/20/03/profile-449912__340.jpg",
-  },
-  {
-    image_url:
-      "https://cdn.pixabay.com/photo/2020/09/18/05/58/lights-5580916__340.jpg",
-  },
-  {
-    image_url:
-      "https://cdn.pixabay.com/photo/2016/11/21/12/42/beard-1845166_1280.jpg",
-  },
-];
 
 const ConversationItem = (props: ChatListItemProps) => {
   const { userId } = useContext(AuthContext);
@@ -73,34 +44,40 @@ const ConversationItem = (props: ChatListItemProps) => {
 
   return (
     <>
-    <TouchableOpacity style={styles.container} onPress={enterChatScreen}>
-      <Avatar
-        containerStyle={styles.avatar}
-        size={60}
-        rounded
-        source={{ uri: dataList[1].image_url }}
-      />
-      <View style={styles.rightContainer}>
-        <View style={styles.titleContainer}>
-          <Text style={styles.username} numberOfLines={1}>{conversationName}</Text>
-          <Text style={styles.time}>
-            {formatRelative(conversation.updatedAt, new Date(), {
-              locale: {
-                ...enUS,
-                formatRelative: (token) =>
-                  formatRelativeLocale[
-                    token as keyof typeof formatRelativeLocale
-                  ],
-              },
-            })}
+      <TouchableOpacity style={styles.container} onPress={enterChatScreen}>
+        <Avatar
+          containerStyle={styles.avatar}
+          size={60}
+          rounded
+          source={{
+            uri:
+              participantsExcludeYou[0].user.avatar ??
+              "https://randomuser.me/api/portraits/men/36.jpg",
+          }}
+        />
+        <View style={styles.rightContainer}>
+          <View style={styles.titleContainer}>
+            <Text style={styles.username} numberOfLines={1}>
+              {conversationName}
+            </Text>
+            <Text style={styles.time}>
+              {formatRelative(conversation.updatedAt, new Date(), {
+                locale: {
+                  ...enUS,
+                  formatRelative: (token) =>
+                    formatRelativeLocale[
+                      token as keyof typeof formatRelativeLocale
+                    ],
+                },
+              })}
+            </Text>
+          </View>
+          <Text numberOfLines={2} style={styles.latestMessage}>
+            {latestMessage?.body}
           </Text>
         </View>
-        <Text numberOfLines={2} style={styles.latestMessage}>
-          {latestMessage?.body}
-        </Text>
-      </View>
-    </TouchableOpacity>
-    <Divider inset={true} />
+      </TouchableOpacity>
+      <Divider inset={true} />
     </>
   );
 };

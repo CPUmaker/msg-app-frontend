@@ -61,8 +61,6 @@ export default function ChatDetailsScreen({
 
   const users = usersData?.usersInConversation || [];
 
-  console.log(users);
-
   if (usersLoading || users.length === 0) {
     return <View style={styles.container}></View>;
   }
@@ -104,7 +102,7 @@ export default function ChatDetailsScreen({
             <UserItem
               name={item.username}
               id={item.id}
-              avatarImage=""
+              avatarImage={item.avatar}
               onPress={() => {}}
               navigation={navigation}
             />
